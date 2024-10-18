@@ -9,7 +9,7 @@ passport.use(
     {
       clientID: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
-      callbackURL: '/auth/google/callback'
+      callbackURL: 'https://replit-prac-ppgd.onrender.com/auth/google/callback'
     },
     accessToken => {
       console.log(accessToken);
