@@ -1,6 +1,9 @@
 import express from 'express';
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
+import mongoose from 'mongoose';
+
+mongoose.connect(process.env.mongoURI);
 
 const app = express();
 
