@@ -1,9 +1,10 @@
-import mongoose from 'mongoose';
-const {Schema}= mongoose;
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
-//this is a modal class that will be used to store the user data
 const userSchema = new Schema({
-  googleID: String
-})
+  googleId: String,
+  displayName: String,
+  email: String
+});
 
 mongoose.model('users', userSchema);

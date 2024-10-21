@@ -1,6 +1,6 @@
-import passport from 'passport';
-import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
-import mongoose from 'mongoose';
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const mongoose = require('mongoose');
 
 const User = mongoose.model('users');
 
@@ -9,11 +9,28 @@ passport.use(
     {
       clientID: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
-      callbackURL: 'https://replit-prac-ppgd.onrender.com/auth/google/callback'
+      callbackURL: process.env.callbackURL
     },
-    (accessToken, refreshToken, profile, done) => {
-      consol.log(profile);
-      new User({ googleId: profile.id }).save();
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        let existingUser = await User.findOne({ googleId: profile.id });
+
+        if (existingUser) {
+          return done(null, existingUser);
+        }
+
+        const newUser = await new User(
+          {
+            googleId: profile.id,
+            displayName: profile.displayName,
+            email: profile.emails[0].value
+          }
+        ).save();
+        done(null, newUser);
+      } catch (error) {
+        console.error('Error saving user: ', error);
+        done(error, null);
+      }
     }
   )
 );

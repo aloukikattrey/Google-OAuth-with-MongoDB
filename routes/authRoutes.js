@@ -1,6 +1,6 @@
-import passport from 'passport';
+const passport = require('passport');
 
-export default app => {
+module.exports = app => {
   app.get(
     '/auth/google',
     passport.authenticate('google', {
@@ -8,5 +8,11 @@ export default app => {
     })
   );
 
-  app.get('/auth/google/callback',     passport.authenticate('google'));
+  app.get('/auth/google/callback', passport.authenticate('google'));
+  
+  app.get('/', (req, res) => {
+    res.send('Hello!');
+  });
 };
+
+  
