@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const passport = require('passport');
+const cookieSession = require('cookie-session');
 
 
 require('./models/User');
@@ -10,27 +11,13 @@ require('./services/passport');
 const app = express();
 
 app.use(
-  session({
-    secret: 'yourSecretKey',
-    resave: false,
-    saveUninitialized: true,
+  cookieSession({
+    maxAge :30*24*60*60*1000, //30 days into millisecs
+    keys: [process.env.cookieKey]
   })
-);
+)
 app.use(passport.initialize());
-app.use(passport.session());
-
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
-
-passport.deserializeUser((id, done) => {
-  User.findById(id).then(user => {
-    done(null, user);
-  });
-});
-
-
-// mongoose.connect(process.env.mongoURI);
+app.use(passport.session())
 
 const MONGODB_URI = process.env.mongoURI;
 
